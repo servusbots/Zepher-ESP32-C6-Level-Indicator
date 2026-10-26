@@ -1,0 +1,177 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "West: Build Active Lab",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -b xiao_esp32c6 -p auto -- -DBOARD_ROOT=\"${workspaceFolder}\""
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "West: Pristine Rebuild Active Lab",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -b xiao_esp32c6 -p always -- -DBOARD_ROOT=\"${workspaceFolder}\""
+      ],
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "West: Build Selected Lab...",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; .\\scripts\\build.ps1 -Lab ${input:selectedLab} -Pristine"
+      ],
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "West: Flash Firmware",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; .\\scripts\\flash.ps1"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "West: Serial Monitor (115200 baud)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; .\\scripts\\monitor.ps1"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "new"
+      }
+    },
+    {
+      "label": "West: Build, Flash & Monitor (All-In-One)",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "West: Build Active Lab",
+        "West: Flash Firmware",
+        "West: Serial Monitor (115200 baud)"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "West: Open Menuconfig",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -t menuconfig"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "new"
+      }
+    },
+    {
+      "label": "ESP: Check Connection & Chip Info",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; python -m esptool chip_info"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "ESP: Erase Full Flash",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; python -m esptool --chip esp32c6 erase_flash"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "selectedLab",
+      "type": "pickString",
+      "description": "Select the Lab to build:",
+      "options": [
+        "labs/01_blinky",
+        "labs/02_button_interrupt",
+        "labs/03_usb_logging_and_shell",
+        "labs/04_rtos_multithreading",
+        "labs/05_timers_and_workqueues",
+        "labs/06_pwm_fade",
+        "labs/07_i2c_scanner",
+        "labs/08_ble_beacon"
+      ],
+      "default": "labs/01_blinky"
+    }
+  ]
+}

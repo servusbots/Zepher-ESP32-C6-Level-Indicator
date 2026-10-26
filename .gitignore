@@ -1,0 +1,37 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Zephyr build directories
+build/
+twister-out*/
+.cache/
+compile_commands.json
+
+# Upstream Zephyr West repositories (managed by west update)
+zephyr/
+modules/
+tools/
+bootloader/
+
+# Zephyr SDK toolchains (if downloaded locally)
+zephyr-sdk*/
+tools/zephyr-sdk*/
+
+# Windows / OS artifacts
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# VS Code temporary/workspace files
+.vscode/*.log
+.vscode/.ropeproject
+*.suo
+*.user
+*.userosv
+*.sln.docstates

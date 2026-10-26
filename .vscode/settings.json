@@ -1,0 +1,35 @@
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": [
+        "-NoExit",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "if (Test-Path '.\\scripts\\env.ps1') { . .\\scripts\\env.ps1 }"
+      ]
+    }
+  },
+  "terminal.integrated.env.windows": {
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "files.associations": {
+    "*.overlay": "dts",
+    "*.dts": "dts",
+    "*.dtsi": "dts",
+    "Kconfig*": "kconfig",
+    "prj.conf": "properties",
+    "*.conf": "properties"
+  },
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/zephyr/include",
+    "${workspaceFolder}/zephyr/include/zephyr",
+    "${workspaceFolder}/build/zephyr/include/generated",
+    "${workspaceFolder}/modules/**"
+  ],
+  "C_Cpp.default.intelliSenseMode": "gcc-riscv",
+  "cmake.configureOnOpen": false
+}

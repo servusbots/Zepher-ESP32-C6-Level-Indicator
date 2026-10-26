@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "twxs.cmake",
+    "trond-snekvik.gnu-mapfiles",
+    "mshr-h.dts-format",
+    "ms-vscode.vscode-serial-monitor"
+  ]
+}

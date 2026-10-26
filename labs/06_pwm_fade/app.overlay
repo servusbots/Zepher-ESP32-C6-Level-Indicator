@@ -1,0 +1,41 @@
+/*
+ * Devicetree overlay for Lab 06: PWM Breathing LED
+ * Configures the onboard Yellow LED (GPIO 15) using the ESP32-C6 LEDC PWM controller.
+ */
+
+#include <zephyr/dt-bindings/pwm/pwm.h>
+
+/ {
+	pwmleds {
+		compatible = "pwm-leds";
+		pwm_led0: pwm_led_0 {
+			pwms = <&ledc0 0 PWM_HZ(1000) PWM_POLARITY_INVERTED>;
+			label = "User PWM LED";
+		};
+	};
+
+	aliases {
+		pwm-led0 = &pwm_led0;
+	};
+};
+
+&pinctrl {
+	ledc0_default: ledc0_default {
+		group1 {
+			pinmux = <LEDC_CH0_GPIO15>;
+			output-low;
+		};
+	};
+};
+
+&ledc0 {
+	pinctrl-0 = <&ledc0_default>;
+	pinctrl-names = "default";
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	channel0@0 {
+		reg = <0x0>;
+		timer = <0>;
+	};
+};
