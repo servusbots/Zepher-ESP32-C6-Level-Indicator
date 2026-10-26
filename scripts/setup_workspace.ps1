@@ -46,6 +46,9 @@ if ($SkipWestUpdate) {
     
     Write-Host "  Running 'west update' (fetching Zephyr and hal_espressif)..."
     & $WestExe update
+
+    Write-Host "  Fetching Espressif Wi-Fi 6 / BLE / 802.15.4 PHY binary blobs..."
+    & $WestExe blobs fetch hal_espressif
     
     # Install Zephyr's internal Python requirements
     $ZephyrReqs = Join-Path $WorkspaceRoot "zephyr\scripts\requirements.txt"

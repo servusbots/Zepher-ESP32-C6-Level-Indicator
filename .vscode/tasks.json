@@ -44,6 +44,71 @@
       }
     },
     {
+      "label": "App: Build Standard (prj.conf)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -p always -b xiao_esp32c6/esp32c6/hpcore --sysbuild .\\xiao_c6_zephyr_app -- -DBOARD_ROOT=\"${workspaceFolder}\""
+      ],
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "App: Build Minimal ~24KB (prj_minimal.conf)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -p always -b xiao_esp32c6/esp32c6/hpcore --sysbuild .\\xiao_c6_zephyr_app -- -DCONF_FILE=prj_minimal.conf -DBOARD_ROOT=\"${workspaceFolder}\""
+      ],
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "App: Build Wi-Fi 6 + MQTT (prj_wifi6.conf)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -p always -b xiao_esp32c6/esp32c6/hpcore --sysbuild .\\xiao_c6_zephyr_app -- -DCONF_FILE=prj_wifi6.conf -DBOARD_ROOT=\"${workspaceFolder}\""
+      ],
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "App: ROM Footprint Report",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -t rom_report"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "App: RAM Footprint Report",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". .\\scripts\\env.ps1; west build -t ram_report"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "West: Build Selected Lab...",
       "type": "shell",
       "command": "powershell",
@@ -162,6 +227,7 @@
       "type": "pickString",
       "description": "Select the Lab to build:",
       "options": [
+        "xiao_c6_zephyr_app",
         "labs/01_blinky",
         "labs/02_button_interrupt",
         "labs/03_usb_logging_and_shell",
@@ -171,7 +237,7 @@
         "labs/07_i2c_scanner",
         "labs/08_ble_beacon"
       ],
-      "default": "labs/01_blinky"
+      "default": "xiao_c6_zephyr_app"
     }
   ]
 }
