@@ -26,15 +26,16 @@ if (Test-Path $ZephyrBase) {
     $env:ZEPHYR_BASE = $ZephyrBase
 }
 
-# 4. Configure Board and Board Root (for custom board definitions)
+# 4. Configure Board Target
 $env:BOARD = "xiao_esp32c6"
-$env:BOARD_ROOT = $WorkspaceRoot
 
 # 5. Detect and Configure Zephyr SDK
 $SdkCandidates = @(
     (Join-Path $WorkspaceRoot "tools\zephyr-sdk"),
-    (Join-Path $HOME "zephyr-sdk-0.17.0"),
+    (Join-Path $HOME "zephyr-sdk-1.0.1"),
     (Join-Path $HOME "zephyr-sdk"),
+    (Join-Path $HOME "zephyr-sdk-0.17.0"),
+    "C:\zephyr-sdk-1.0.1",
     "C:\zephyr-sdk-0.17.0",
     "C:\zephyr-sdk"
 )
@@ -50,7 +51,7 @@ foreach ($cand in $SdkCandidates) {
 if ($FoundSdk) {
     $env:ZEPHYR_SDK_INSTALL_DIR = $FoundSdk
 } else {
-    $env:ZEPHYR_SDK_INSTALL_DIR = (Join-Path $HOME "zephyr-sdk-0.17.0")
+    $env:ZEPHYR_SDK_INSTALL_DIR = (Join-Path $HOME "zephyr-sdk-1.0.1")
 }
 
 # 6. Display Welcome Banner

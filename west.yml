@@ -16,6 +16,7 @@ manifest:
           - hal_espressif
           - mbedtls
           - mcuboot
+          - tf-psa-crypto
 
   self:
-    path: .
+    path: xiao_c6_zephyr_app

@@ -1,0 +1,22 @@
+manifest:
+  defaults:
+    remote: upstream
+
+  remotes:
+    - name: upstream
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: upstream
+      revision: main
+      clone-depth: 1
+      import:
+        name-allowlist:
+          - hal_espressif
+          - mbedtls
+          - mcuboot
+          - tf-psa-crypto
+
+  self:
+    path: xiao_c6_zephyr_app

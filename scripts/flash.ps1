@@ -44,7 +44,14 @@ Write-Host ">>> Attempting 'west flash' on port $Port at $Baud baud..." -Foregro
 
 # West flash runner
 try {
-    west flash --esp-port $Port --esp-baud-rate $Baud --esp-reset-type watchdog_reset
+    if (Test-Path (Join-Path $WorkspaceRoot "build\mcuboot")) {
+        Write-Host ">>> Flashing sysbuild image: mcuboot (bootloader)..." -ForegroundColor Cyan
+        west flash --domain mcuboot --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
+        Write-Host ">>> Flashing sysbuild image: application..." -ForegroundColor Cyan
+        west flash --domain xiao_c6_zephyr_app --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
+    } else {
+        west flash --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
+    }
     if ($LASTEXITCODE -eq 0) {
         Write-Host "`n>>> Flashing Complete! Resetting board..." -ForegroundColor Green
         Write-Host ">>> To view serial logs: .\scripts\monitor.ps1 -Port $Port" -ForegroundColor Yellow
@@ -54,11 +61,26 @@ try {
     Write-Warning "west flash encountered an error, trying direct esptool runner..."
 }
 
-# Fallback direct esptool invocation if build/zephyr exists
+# Fallback direct esptool invocation if build exists
+$mcubootBin = Join-Path $WorkspaceRoot "build\mcuboot\zephyr\zephyr.bin"
+$appBin = Join-Path $WorkspaceRoot "build\xiao_c6_zephyr_app\zephyr\zephyr.signed.bin"
+if ((Test-Path $mcubootBin) -and (Test-Path $appBin)) {
+    Write-Host ">>> Flashing mcuboot (0x0) and application (0x20000) directly with esptool..." -ForegroundColor Cyan
+    python -m esptool --chip esp32c6 --port $Port --baud $Baud --after watchdog-reset write-flash 0x0 $mcubootBin 0x20000 $appBin
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "`n>>> Flashing Succeeded via esptool!" -ForegroundColor Green
+        Write-Host ">>> To view serial logs: .\scripts\monitor.ps1 -Port $Port" -ForegroundColor Yellow
+        exit 0
+    }
+}
+
 $buildBin = Join-Path $WorkspaceRoot "build\zephyr\zephyr.bin"
+if (-not (Test-Path $buildBin)) {
+    $buildBin = Join-Path $WorkspaceRoot "build\xiao_c6_zephyr_app\zephyr\zephyr.bin"
+}
 if (Test-Path $buildBin) {
     Write-Host ">>> Flashing zephyr.bin directly with esptool..." -ForegroundColor Cyan
-    python -m esptool --chip esp32c6 --port $Port --baud $Baud --after watchdog_reset write_flash 0x0 $buildBin
+    python -m esptool --chip esp32c6 --port $Port --baud $Baud --after watchdog-reset write-flash 0x0 $buildBin
     if ($LASTEXITCODE -eq 0) {
         Write-Host "`n>>> Flashing Succeeded via esptool!" -ForegroundColor Green
         Write-Host ">>> To view serial logs: .\scripts\monitor.ps1 -Port $Port" -ForegroundColor Yellow

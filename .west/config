@@ -1,5 +1,5 @@
 [manifest]
-path = .
+path = xiao_c6_zephyr_app
 file = west.yml
 
 [zephyr]
