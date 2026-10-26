@@ -1,0 +1,42 @@
+/*
+ * Devicetree overlay for Seeed Studio XIAO ESP32C6 Level Indicator
+ * - SSD1306 128x64 OLED Display (I2C 0x3C)
+ * - MPU-6050 6-Axis IMU Sensor (I2C 0x68)
+ *
+ * Hardware Wiring:
+ *   SDA -> XIAO D4 (GPIO 22)
+ *   SCL -> XIAO D5 (GPIO 23)
+ *   VCC -> 3.3V
+ *   GND -> GND
+ */
+
+/ {
+	chosen {
+		zephyr,display = &ssd1306;
+	};
+};
+
+&i2c0 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+
+	ssd1306: ssd1306@3c {
+		compatible = "solomon,ssd1306";
+		reg = <0x3c>;
+		width = <128>;
+		height = <64>;
+		segment-offset = <0>;
+		page-offset = <0>;
+		display-offset = <0>;
+		multiplex-ratio = <63>;
+		segment-remap;
+		com-invdir;
+		prechargep = <0x22>;
+	};
+
+	mpu6050: mpu6050@68 {
+		compatible = "invensense,mpu6050";
+		reg = <0x68>;
+		status = "okay";
+	};
+};

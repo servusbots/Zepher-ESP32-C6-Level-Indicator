@@ -45,10 +45,19 @@ Write-Host ">>> Attempting 'west flash' on port $Port at $Baud baud..." -Foregro
 # West flash runner
 try {
     if (Test-Path (Join-Path $WorkspaceRoot "build\mcuboot")) {
+        $appDomain = "levelindicator"
+        $domainsYamlPath = Join-Path $WorkspaceRoot "build\domains.yaml"
+        if (Test-Path $domainsYamlPath) {
+            $match = Select-String -Path $domainsYamlPath -Pattern "^default:\s*(.+)$"
+            if ($match -and $match.Matches.Groups.Count -gt 1) {
+                $appDomain = $match.Matches.Groups[1].Value.Trim()
+            }
+        }
+
         Write-Host ">>> Flashing sysbuild image: mcuboot (bootloader)..." -ForegroundColor Cyan
         west flash --domain mcuboot --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
-        Write-Host ">>> Flashing sysbuild image: application..." -ForegroundColor Cyan
-        west flash --domain xiao_c6_zephyr_app --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
+        Write-Host ">>> Flashing sysbuild image: $appDomain..." -ForegroundColor Cyan
+        west flash --domain $appDomain --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
     } else {
         west flash --esp-device $Port --esp-baud-rate $Baud --reset-type watchdog-reset
     }
@@ -63,9 +72,9 @@ try {
 
 # Fallback direct esptool invocation if build exists
 $mcubootBin = Join-Path $WorkspaceRoot "build\mcuboot\zephyr\zephyr.bin"
-$appBin = Join-Path $WorkspaceRoot "build\xiao_c6_zephyr_app\zephyr\zephyr.signed.bin"
+$appBin = Join-Path $WorkspaceRoot "build\$appDomain\zephyr\zephyr.signed.bin"
 if ((Test-Path $mcubootBin) -and (Test-Path $appBin)) {
-    Write-Host ">>> Flashing mcuboot (0x0) and application (0x20000) directly with esptool..." -ForegroundColor Cyan
+    Write-Host ">>> Flashing mcuboot (0x0) and $appDomain (0x20000) directly with esptool..." -ForegroundColor Cyan
     python -m esptool --chip esp32c6 --port $Port --baud $Baud --after watchdog-reset write-flash 0x0 $mcubootBin 0x20000 $appBin
     if ($LASTEXITCODE -eq 0) {
         Write-Host "`n>>> Flashing Succeeded via esptool!" -ForegroundColor Green
